@@ -1,0 +1,10 @@
+sudo apt-get build-dep bluez-tools 
+apt-get source --compile bluez-tools
+sudo apt-get install python-pip
+
+sudo apt-get install cmake
+
+inside libusb tar file go and ./configure
+sudo apt-get install gcc build-essential
+sudo apt-cache madison libudev-dev
+sudo apt-get install libudev-dev

@@ -1,0 +1,3 @@
+sudo apt-get build-dep bluez-tools 
+apt-get source --compile bluez-tools
+sudo apt-get install python-pip
