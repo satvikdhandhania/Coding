@@ -19,7 +19,7 @@ public class Race {
 		System.out.println("Enter hare's nap time: ");
 		int hareNap = reader.nextInt(); // Scans the next token of the input as an int.
 		
-		Hare hare = new Hare(hareNap, 100000);
+		Hare hare = new Hare(hareNap, harePrior);
 		Thread hareThread = new Thread(hare);
 		hareThread.setPriority(harePrior);
 		Tortoise tortoise = new Tortoise();
