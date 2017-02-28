@@ -2,6 +2,7 @@ import java.lang.String;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -106,10 +107,11 @@ public class ServerFault {
 
 
 		while ((line = b.readLine()) != null) {
+			/*
 			System.out.print(counter);
 			for(int i=0;i<String.valueOf(counter).length();i++)
 				System.out.print("\b");
-
+			*/
 			counter++;
 			String Id = parseFieldFromLine(line, "Id");
 			String PostTypeId = parseFieldFromLine(line, "PostTypeId");
@@ -198,113 +200,121 @@ public class ServerFault {
 		System.out.println("Read Completed : readPosts");
 
 		myTop10answer();
-
-		System.out.println("Step2");
+		
 		myTop10AcceptedAnswer();
-
-
+		
 		System.out.println();
 	}
+	
+	
 	private void myTop10AcceptedAnswer() {
 
 		// TODO Auto-generated method stub
 		System.out.println("Top 10 users with the most answers:");
-		HashMap<String, User> top10temp = (HashMap<String, User>) users.clone();
-
-		for (int i = 0; i < 10; i++) {
-			String key = "";
-			int count = 0;
-
-			for (Entry<String, User> it : top10temp.entrySet()) {
-				if (it.getValue().acceptedAnswers >= count) {
-					key = it.getKey();
-					count = it.getValue().acceptedAnswers;
-				}
-			}
-			/* If there are less than 10 users or user displayNames were not assigned.*/
-			if(!key.equals("") && !top10temp.get(key).DisplayName.equals("Default_Name"))
-			{
-				System.out.print(count);
-				System.out.print('\t');
-				System.out.println(top10temp.get(key).DisplayName);
-				top10temp.remove(key);
-			}
-		}
-	}
-
-
-	private void myTop10answer() {
-
-		// TODO Auto-generated method stub
-		System.out.println("Top 10 users with the most answers:");
-		HashMap<String, User> top10temp = (HashMap<String, User>) users.clone();
-
+		
 		TreeMap<Integer,ArrayList<String>> treemap = new TreeMap<Integer,ArrayList<String>>();
 		int count = 0;
 		int size = 0;
 
-
-		for (Entry<String, User> it : top10temp.entrySet()) {
-			if (it.getValue().answers >= count) {
+		for (Entry<String, User> it : users.entrySet()) {
+			if (it.getValue().acceptedAnswers > count) {
 				if(size >=10) {
 					count = treemap.firstKey(); 
 
-					if(it.getValue().answers >= count)
-					{
+					ArrayList<String> arr = treemap.get(count);
+					arr.remove(0);
+					size--;
+					if(arr.isEmpty())
 						treemap.remove(count);
-						treemap.put(it.getValue().answers, it.getValue().DisplayName);
-					}
-
-				} else {
-					if(treemap.containsKey(it.getValue().answers)) {
-						ArrayList<String> arr = treemap.get(it.getValue().answers);
-						arr.add(it.getValue().DisplayName)
+					if(treemap.containsKey(it.getValue().acceptedAnswers)) {
+						ArrayList<String> arr2 = treemap.get(it.getValue().acceptedAnswers);
+						arr2.add(it.getValue().DisplayName);
+						size++;
 					} else {
-
+						ArrayList<String> arr3 = new ArrayList<String>();
+						arr3.add(it.getValue().DisplayName);
+						size++;	
+						treemap.put(it.getValue().acceptedAnswers, arr3);	
+					}	
+				} else {
+					if(treemap.containsKey(it.getValue().acceptedAnswers)) {
+						ArrayList<String> arr = treemap.get(it.getValue().acceptedAnswers);
+						arr.add(it.getValue().DisplayName);
+						size++;
+					} else {
+						ArrayList<String> arr = new ArrayList<String>();
+						arr.add(it.getValue().DisplayName);
+						treemap.put(it.getValue().acceptedAnswers, arr);
+						size++;		
 					}
 				}
-
 			}
 		}
-		/*
-		for (Entry<Integer, String> t : treemap.entrySet()) {
-			System.out.print(t.getKey());
-			System.out.print('\t');
-			System.out.println(t.getValue());
-		}*/
 
-
+		for (Entry<Integer, ArrayList<String>> t : treemap.descendingMap().entrySet()) {
+			for(String name: t.getValue())
+			{
+				System.out.print(t.getKey());
+				System.out.print('\t');
+				System.out.println(name);
+			}
+		}
 	}
-
-	private void NmyTop10answer() {
+	
+	private void myTop10answer() {
 
 		// TODO Auto-generated method stub
 		System.out.println("Top 10 users with the most answers:");
-		HashMap<String, User> top10temp = (HashMap<String, User>) users.clone();
+		
+		TreeMap<Integer,ArrayList<String>> treemap = new TreeMap<Integer,ArrayList<String>>();
+		int count = 0;
+		int size = 0;
 
+		for (Entry<String, User> it : users.entrySet()) {
+			if (it.getValue().answers > count) {
+				if(size >=10) {
+					count = treemap.firstKey(); 
 
-
-
-		for (int i = 0; i < 10; i++) {
-			String key = "";
-			int count = 0;
-
-			for (Entry<String, User> it : top10temp.entrySet()) {
-				if (it.getValue().answers >= count) {
-					key = it.getKey();
-					count = it.getValue().answers;
+					ArrayList<String> arr = treemap.get(count);
+					arr.remove(0);
+					size--;
+					if(arr.isEmpty())
+						treemap.remove(count);
+					if(treemap.containsKey(it.getValue().answers)) {
+						ArrayList<String> arr2 = treemap.get(it.getValue().answers);
+						arr2.add(it.getValue().DisplayName);
+						size++;
+					} else {
+						ArrayList<String> arr3 = new ArrayList<String>();
+						arr3.add(it.getValue().DisplayName);
+						size++;	
+						treemap.put(it.getValue().answers, arr3);	
+					}	
+				} else {
+					if(treemap.containsKey(it.getValue().answers)) {
+						ArrayList<String> arr = treemap.get(it.getValue().answers);
+						arr.add(it.getValue().DisplayName);
+						size++;
+					} else {
+						ArrayList<String> arr = new ArrayList<String>();
+						arr.add(it.getValue().DisplayName);
+						treemap.put(it.getValue().answers, arr);
+						size++;		
+					}
 				}
 			}
-			/* If there are less than 10 users or user displayNames were not assigned.*/
-			if(!key.equals("") && !top10temp.get(key).DisplayName.equals("Default_Name"))
+		}
+
+		for (Entry<Integer, ArrayList<String>> t : treemap.descendingMap().entrySet()) {
+			for(String name: t.getValue())
 			{
-				System.out.print(count);
+				System.out.print(t.getKey());
 				System.out.print('\t');
-				System.out.println(top10temp.get(key).DisplayName);
-				top10temp.remove(key);
+				System.out.println(name);
 			}
 		}
 	}
+
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		ServerFault s = new ServerFault();

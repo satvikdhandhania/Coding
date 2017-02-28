@@ -93,7 +93,8 @@ public class ServerFault {
 
 
 	void readPosts(String filename) throws FileNotFoundException, IOException {
-		int counter = 0;
+		// Counter to display process
+		//int counter = 0;
 		// Keep track of all posts
 		HashMap<String, Question> questions = new HashMap<String, Question>();
 
@@ -107,11 +108,14 @@ public class ServerFault {
 
 
 		while ((line = b.readLine()) != null) {
+			/*
+			 * Provides update for records processed
 			System.out.print(counter);
 			for(int i=0;i<String.valueOf(counter).length();i++)
 				System.out.print("\b");
-
 			counter++;
+			*/
+	
 			String Id = parseFieldFromLine(line, "Id");
 			String PostTypeId = parseFieldFromLine(line, "PostTypeId");
 			String OwnerUserId = parseFieldFromLine(line, "OwnerUserId");
@@ -192,18 +196,14 @@ public class ServerFault {
 
 	public void run() throws FileNotFoundException, IOException {
 		// Load our data
-		readUsers("Users.xml");
-		System.out.println("Read Completed :readUsers");
-
-		readPosts("Posts.xml");
-		System.out.println("Read Completed : readPosts");
+		readUsers("users-short.xml");
+		
+		readPosts("posts-short.xml");
 
 		myTop10answer();
-
-		System.out.println("Step2");
+		
 		myTop10AcceptedAnswer();
-
-
+		
 		System.out.println();
 	}
 	
@@ -211,7 +211,7 @@ public class ServerFault {
 	private void myTop10AcceptedAnswer() {
 
 		// TODO Auto-generated method stub
-		System.out.println("Top 10 users with the most answers:");
+		System.out.println("Top 10 users with the most Accepted answers:");
 		
 		TreeMap<Integer,ArrayList<String>> treemap = new TreeMap<Integer,ArrayList<String>>();
 		int count = 0;
@@ -262,34 +262,6 @@ public class ServerFault {
 		}
 	}
 	
-	private void NmyTop10AcceptedAnswer() {
-
-		// TODO Auto-generated method stub
-		System.out.println("Top 10 users with the most answers:");
-		HashMap<String, User> top10temp = (HashMap<String, User>) users.clone();
-
-		for (int i = 0; i < 10; i++) {
-			String key = "";
-			int count = 0;
-
-			for (Entry<String, User> it : top10temp.entrySet()) {
-				if (it.getValue().acceptedAnswers >= count) {
-					key = it.getKey();
-					count = it.getValue().acceptedAnswers;
-				}
-			}
-			/* If there are less than 10 users or user displayNames were not assigned.*/
-			if(!key.equals("") && !top10temp.get(key).DisplayName.equals("Default_Name"))
-			{
-				System.out.print(count);
-				System.out.print('\t');
-				System.out.println(top10temp.get(key).DisplayName);
-				top10temp.remove(key);
-			}
-		}
-	}
-
-
 	private void myTop10answer() {
 
 		// TODO Auto-generated method stub
@@ -344,35 +316,6 @@ public class ServerFault {
 		}
 	}
 
-	private void NmyTop10answer() {
-
-		// TODO Auto-generated method stub
-		System.out.println("Top 10 users with the most answers:");
-		HashMap<String, User> top10temp = (HashMap<String, User>) users.clone();
-
-
-
-
-		for (int i = 0; i < 10; i++) {
-			String key = "";
-			int count = 0;
-
-			for (Entry<String, User> it : top10temp.entrySet()) {
-				if (it.getValue().answers >= count) {
-					key = it.getKey();
-					count = it.getValue().answers;
-				}
-			}
-			/* If there are less than 10 users or user displayNames were not assigned.*/
-			if(!key.equals("") && !top10temp.get(key).DisplayName.equals("Default_Name"))
-			{
-				System.out.print(count);
-				System.out.print('\t');
-				System.out.println(top10temp.get(key).DisplayName);
-				top10temp.remove(key);
-			}
-		}
-	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		ServerFault s = new ServerFault();
